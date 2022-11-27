@@ -1,6 +1,14 @@
 import jwt from "jsonwebtoken";
 import config from "../config.js";
 
+/**
+ *
+ * @param req
+ * @param res
+ * @param next
+ * @description Middleware for checking authentication
+ * @returns {error || next()}
+ */
 export default function (req, res, next){
  if(req.method ===  "OPTIONS"){
      next()

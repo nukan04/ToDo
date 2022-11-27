@@ -1,20 +1,38 @@
+
+/** Express router providing user related routes
+ * @module routers/auth
+ * @requires express
+ */
+
 /**
- * Module dependencies.
+ * express module
+ * @const
  */
 import express from 'express'
-const router = express.Router();
 import controller from './controllerAuth.js'
 import {check} from 'express-validator'
 import authMiddleware from './middleware/authMiddleware.js'
 import roleMiddleware from './middleware/roleMiddleware.js'
 
 /**
- * @route   POST api/auth/registration
- * @desc    Register user
- * @access  Public
- * @return  {object} 201 - user object
- * @return  {Error}  400 - Bad request
+ * Express router to mount user related functions on.
+ * @type {object}
+ * @const
+ * @namespace usersRouter
  */
+const router = express.Router();
+
+/**
+ * Route serving login form.
+ * @name post/registration
+ * @function
+ * @memberof module:routers/users~usersRouter
+ * @inner
+ * @param {string} path - Express path
+ * @param {check} - express-validator.
+ * @param {registration} function - controllerAuth.
+ */
+
 router.post('/registration', [
     check('username', "Username can't be empty").notEmpty(),
     check('password', "Password can't be empty").isLength({min: 4, max: 12})
@@ -55,7 +73,7 @@ router.post('/addTask', authMiddleware, controller.addTask)
  */
 router.get('/getTasks', authMiddleware, controller.getTasks)
 /**
- * @route DELETE api/auth/delereTask
+ * @route DELETE api/auth/deleteTask
  * @desc Delete task
  * @access private
  * @return {user.tasks} 200 - user object

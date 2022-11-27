@@ -2,9 +2,10 @@
   "name": "todo2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server/index.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon server/index.js",
+    "doc": "jsdoc -c jsdoc.json"
   },
   "keywords": [],
   "author": "",
@@ -18,5 +19,8 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.7.3",
     "nodemon": "^2.0.20"
+  },
+  "devDependencies": {
+    "jsdoc": "^4.0.0"
   }
 }

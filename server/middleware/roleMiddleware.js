@@ -1,6 +1,19 @@
 import jwt from "jsonwebtoken";
 import config from "../config.js";
+
+/**
+ *
+ * @param roles
+ * @returns {(function(*, *, *))}
+ */
 export default function (roles) {
+    /**
+     * @param req
+     * @param res
+     * @param next
+     * @description Middleware for checking user roles
+     * @returns {error || next()}
+     */
     return function (req, res, next) {
         if (req.method === "OPTIONS") {
             next()
