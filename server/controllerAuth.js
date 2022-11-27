@@ -14,7 +14,9 @@ const generateAccessToken = (id, roles) => {
     return jwt.sign(payload, config.secret, {expiresIn: "1h"})
 }
 
+
 class controllerAuth {
+
     async registration(req, res) {
         try {
             const errors = validationResult(req)
