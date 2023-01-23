@@ -1,19 +1,8 @@
 import jwt from "jsonwebtoken";
 import config from "../config.js";
 
-/**
- *
- * @param roles
- * @returns {(function(*, *, *))}
- */
 export default function (roles) {
-    /**
-     * @param req
-     * @param res
-     * @param next
-     * @description Middleware for checking user roles
-     * @returns {error || next()}
-     */
+
     return function (req, res, next) {
         if (req.method === "OPTIONS") {
             next()
@@ -24,15 +13,21 @@ export default function (roles) {
                 return res.status(403).json({message: "Not authorized"})
             }
             const {roles: userRoles} = jwt.verify(token, config.secret);
+            const decodedData = jwt.verify(token, config.secret);
+            req.data = decodedData;
+            console.log("decodedData", req.data);
             let hasRole = false;
+            console.log("roles", roles);
             userRoles.forEach(role => {
                 if (roles.includes(role)) {
+                    console.log("role", role);
                     hasRole = true;
                 }
             })
             if (!hasRole) {
                 return res.status(403).json({message: "Access not denied"})
             }
+
             next();
         } catch (e) {
             return res.status(403).json({message: "Not authorized"})
