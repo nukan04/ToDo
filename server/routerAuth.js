@@ -1,87 +1,69 @@
-
-/** Express router providing user related routes
- * @module routers/auth
- * @requires express
- */
-
-/**
- * express module
- * @const
- */
 import express from 'express'
-import controller from './controllerAuth.js'
+import controller from './controller/controllerAuth.js'
+import auth from './controller/authController.js'
+import organization from './controller/organizationController.js'
 import {check} from 'express-validator'
 import authMiddleware from './middleware/authMiddleware.js'
-import roleMiddleware from './middleware/roleMiddleware.js'
+import roleMiddleware from "./middleware/roleMiddleware.js";
+import volontaire from "./controller/volontaireController.js";
+import admin from "./controller/adminController.js";
 
-/**
- * Express router to mount user related functions on.
- * @type {object}
- * @const
- * @namespace usersRouter
- */
 const router = express.Router();
-
-/**
- * Route serving login form.
- * @name post/registration
- * @function
- * @memberof module:routers/users~usersRouter
- * @inner
- * @param {string} path - Express path
- * @param {check} - express-validator.
- * @param {registration} function - controllerAuth.
- */
-
+//organization routes
+router.post('/registrateOrganization', [
+    check('email', "Username can't be empty").notEmpty(),
+    check('password', "Password can't be empty").isLength({min: 4, max: 12}),
+    check('name', "Name can't be empty").notEmpty()
+], auth.registrateOrganization)
+router.post('/createEvent', roleMiddleware('[ORGANIZATION]'), [
+    check('title', "Title cannot be empty").notEmpty(),
+    check('date', "Date cannot be empty").notEmpty()
+], organization.createEvent)
+router.post('/loginOrganization', [
+    check('email', "Username can't be empty").notEmpty(),
+    check('password', "Password can't be empty").isLength({min: 4, max: 12})
+], auth.loginOrganization)
+router.delete('/deleteEvent', roleMiddleware('[ORGANIZATION]'), organization.deleteEvent)
+router.get('/getEvents', roleMiddleware('[ORGANIZATION]'), organization.getEvents)
+//volontaire routes
+router.post('/registrateVolontaire', [
+    check('email', "Username can't be empty").notEmpty(),
+    check('password', "Password can't be empty").isLength({min: 4, max: 12}),
+    check('firstname', "Firstname can't be empty").notEmpty(),
+    check('lastname', "Lastname can't be empty").notEmpty(),
+    check('birthdate', "BirthDate can't be empty").notEmpty(),
+    check('phone', "Phone can't be empty").notEmpty()
+], auth.registrateVolontaire)
+router.post('/loginVolontaire', [
+    check('email', "Username can't be empty").notEmpty(),
+    check('password', "Password can't be empty").isLength({min: 4, max: 12})
+], auth.loginVolontaire)
+router.post('/subscribe', roleMiddleware('[VOLONTAIRE]'), volontaire.subscribe)
+router.post('/unsubscribe', roleMiddleware('[VOLONTAIRE]'), volontaire.unsubscribe)
+//---------------ADMIN
+router.post('/registerAdmin', [
+    check('email', "Username can't be empty").notEmpty(),
+    check('password', "Password can't be empty").isLength({min: 4, max: 12})
+], admin.registration)
+router.post('/loginAdmin', [
+    check('email', "Username can't be empty").notEmpty(),
+    check('password', "Password can't be empty").isLength({min: 4, max: 12})
+], admin.login)
+router.get('/GetAllEvents', /*roleMiddleware('[ADMIN]'),*/ admin.GetAllEvents)
+router.get('/GetAllOrganizations', roleMiddleware('[ADMIN]'), admin.GetAllOrganizations)
+router.get('/GetAllVolontaires', roleMiddleware('[ADMIN]'), admin.GetAllVolontaires)
+router.delete('/DeleteEvent', roleMiddleware('[ADMIN]'), admin.DeleteEvent)
+/*
 router.post('/registration', [
     check('username', "Username can't be empty").notEmpty(),
     check('password', "Password can't be empty").isLength({min: 4, max: 12})
 ], controller.registration)
-
-/**
- * @route   POST api/auth/login
- * @desc    Login user
- * @access  Public
- * @return  {token} 200 - user object
- * @return  {Error} 400 - Bad request
- */
+*/
 router.post('/login', controller.login)
-
-/**
- * @route   GET api/auth/users
- * @desc    Get all users
- * @access  Private
- * @return  {users} 200 - user object
- * @return  {Error}  400 - Bad request
- */
 router.get('/users', /*roleMiddleware(['ADMIN']),*/ controller.getUsers)
-
-/**
- * @route   GET api/auth/addTask
- * @desc    Add task
- * @access  Private
- * @return  { something} 200 - user object
- * @return  {Error}  400 - Bad request
- */
 router.post('/addTask', authMiddleware, controller.addTask)
-/**
- * @route   GET api/auth/getTasks
- * @desc    Get tasks
- * @access  Private
- * @return  {user.tasks} 200 - user object
- * @return  {Error}  400 - Bad request
- */
 router.get('/getTasks', authMiddleware, controller.getTasks)
-/**
- * @route DELETE api/auth/deleteTask
- * @desc Delete task
- * @access private
- * @return {user.tasks} 200 - user object
- *  @return  {Error}  400 - Bad request
- */
 router.delete('/deleteTask', authMiddleware, controller.deleteTask)
-/**
- * @export router
- */
-export default  router;
+//
+export default router;
 
