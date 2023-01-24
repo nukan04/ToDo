@@ -29,8 +29,13 @@ function CreateEvent() {
         numberOfParticipants: Yup.number().required("Number of participants is required"),
     });
     const onSubmit = (values) => {
-        axios.post("http://localhost:5000/auth/createEvent", values).then((response) => {
-            console.log("It work");
+        const config = {
+            headers: {
+                Authorization: "Bearer " + sessionStorage.getItem("token"),
+            }
+        }
+        axios.post("http://localhost:5000/auth/createEvent", values, config).then((response) => {
+                console.log("It work");
         });
     };
     return (

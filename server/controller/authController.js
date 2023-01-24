@@ -73,7 +73,7 @@ class authController {
                 return res.status(400).json({message: "Password is incorrect"});
             }
             const token = generateAccessToken(volontaire._id, volontaire.roles);
-            return res.json({token});
+            return res.json(token);
         }catch (e) {
             console.log(e);
             res.status(400).json({message: "Login error"})
@@ -91,7 +91,7 @@ class authController {
                 return res.status(400).json({message: "Password is incorrect"});
             }
             const token = generateAccessToken(organization._id, organization.roles);
-            return res.json({token});
+            return res.json(token);
         }catch (e) {
             console.log(e);
             res.status(400).json({message: "Login error"})

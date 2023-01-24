@@ -13,7 +13,11 @@ function LoginAdmin(){
     })
     const onSubmit = (values) => {
         axios.post("http://localhost:5000/auth/loginAdmin", values).then((response)=>{
-            console.log(response.data);
+            if(response.data.error) alert(response.data.error);
+            else{
+                sessionStorage.setItem("token", response.data);
+                console.log(response.data);
+            }
         });
     };
     return(

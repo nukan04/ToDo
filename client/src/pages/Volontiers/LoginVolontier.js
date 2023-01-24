@@ -15,7 +15,11 @@ function LoginVolontier(){
     });
     const onSubmit = (values) => {
         axios.post("http://localhost:5000/auth/loginVolontaire", values).then((response) => {
+            if(response.data.error) alert(response.data.error);
+            else{
+            sessionStorage.setItem("token", response.data);
             console.log(response.data);
+            }
         });
     };
     return (

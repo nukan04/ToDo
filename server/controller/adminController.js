@@ -53,7 +53,7 @@ class adminController {
                 return res.status(400).json({message: "Incorrect data"})
             }
             const token = generateAccessToken(admin._id, admin.roles);
-            return res.json({token});
+            return res.json(token);
         } catch (e) {
             console.log(e);
             res.status(400).json({message: "Login error(admin)"})
