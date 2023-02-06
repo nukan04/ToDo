@@ -3,8 +3,10 @@ import {Formik, Field, Form, ErrorMessage} from "formik";
 import axios from "axios"
 import * as Yup from "yup"
 import parse from "date-fns/parse";
+import { useNavigate } from "react-router-dom";
 
 function LoginOrganization(){
+    let history = useNavigate();
     const initialValues = {
         email: "",
         password: "",
@@ -18,6 +20,7 @@ function LoginOrganization(){
             if(response.data.error) alert(response.data.error);
             else{
             sessionStorage.setItem("token", response.data);
+            history("/");
             console.log(response.data);
             }
         });

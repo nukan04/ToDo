@@ -10,6 +10,9 @@ import LoginVolontier from "./pages/Volontiers/LoginVolontier";
 import LoginOrganization from "./pages/Organization/LoginOrganization";
 import LoginAdmin from "./pages/Admin/LoginAdmin";
 import RegistrateAdmin from "./pages/Admin/RegistrateAdmin";
+import GetOrganizationEvents from "./pages/Organization/GetOrganizationEvents";
+import GetById from "./pages/Organization/GetById";
+import SubscribeUnsubscribe from "./pages/Volontiers/Subscribe&Unsubscribe";
 
 function App() {
     return (
@@ -30,6 +33,10 @@ function App() {
             <Link to="/loginVolontier"> Login volontier </Link>
             <br/>
             <Link to="/loginOrganization"> Login organization </Link>
+            <br/>
+            <Link to="/getEvents"> GetOrganizationEvents </Link>
+
+
             <Routes>
                 <Route path="/"  element={<Home/>} />
                 <Route path="/organization/createEvent"  element={<CreateEvent/>} />
@@ -39,6 +46,9 @@ function App() {
                 <Route path="/loginAdmin" element={<LoginAdmin/>}/>
                 <Route path="/loginVolontier" element={<LoginVolontier/>}/>
                 <Route path="/loginOrganization" element={<LoginOrganization/>}/>
+                <Route path="/getEvents" element={<GetOrganizationEvents/>}/>
+                <Route path="/getEvents/:id" element={<GetById/>}/>
+                <Route path="/event/:id" element={<SubscribeUnsubscribe/>}/>
             </Routes>
         </Router>
     </div>

@@ -1,8 +1,6 @@
 import Organization from "../models/roles/Organization.js";
 import Volontaire from "../models/roles/Volontaire.js";
 import Event from "../models/Events.js";
-import volontaire from "../models/roles/Volontaire.js";
-//import volontaire from "../models/roles/Volontaire.js";
 
 
 class organizationController {
@@ -70,38 +68,45 @@ class organizationController {
                 return res.status(400).json({message: "Events not found"});
             }
 
-            let eventsInfo=[];
-            //let count = 0;
-            events.forEach(event => {
-                if (event.participants_id.length == 0) {
-                    eventsInfo.push({event: event});
-                }else {
-                    let volontaires = [];
-                    volontaires = async function () {
-                        volontaire =  await Volontaire.find({_id: event.participants_id});
-                        return volontaire;
-                    }
-                    eventsInfo.push({event, volontaires})
-                    console.log(eventsInfo);
-                    /*
-                    event.participants_id.forEach(async (participant_id) => {
-                        const volontaire = await Volontaire.findOne({_id: participant_id});
-                        eventsInfo.push({event: event, volontaires: volontaire});
-                    })
-                     */
-                }
 
+            /*
+            events.forEach(event => {
+                    let participants = [];
+                    async function *printFiles () {
+                        for (let i = 0; i < event.participants_id.length; i++) {
+                            let volontaire = await Volontaire.findOne({_id: event.participants_id[i]});
+                            participants.push(volontaire);
+                        }
+                    }
+                    printFiles();
+                    console.log(participants);
             });
-            res.json(eventsInfo);
+            */
+            return res.json(events);
 
         } catch (e) {
             console.log(e);
             return json.status(400).json({message: "Error in getEvents"})
         }
     }
+    async getEventsById(req, res) {
+        try{
+            const id = req.params.id;
+            const events = await Event.findById(id);
+            if (!events) {
+                return res.status(400).json({message: "Events not found"});
+            }
+            const participants = await Volontaire.find({_id: events.participants_id});
+            if (!participants) {
+                return res.status(400).json({message: "Events not found"});
+            }
 
-    async getVolontairesByEvent(req, res) {
-
+            return res.json({event: events, participant: participants});
+        }catch (e) {
+            console.log(e);
+            return json.status(400).json({message: "Error in getEvents"})
+        }
     }
+
 }
 export default new organizationController();

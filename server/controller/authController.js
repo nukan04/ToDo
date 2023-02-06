@@ -76,7 +76,7 @@ class authController {
             return res.json(token);
         }catch (e) {
             console.log(e);
-            res.status(400).json({message: "Login error"})
+            return res.status(400).json({message: "Login error"})
         }
     }
     async loginOrganization(req, res) {
@@ -94,7 +94,7 @@ class authController {
             return res.json(token);
         }catch (e) {
             console.log(e);
-            res.status(400).json({message: "Login error"})
+            return res.status(400).json({message: "Login error"})
         }
     }
 }

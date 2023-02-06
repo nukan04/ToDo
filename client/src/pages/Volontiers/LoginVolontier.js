@@ -3,6 +3,7 @@ import {Formik, Field, Form, ErrorMessage} from "formik";
 import axios from "axios"
 import * as Yup from "yup"
 import parse from "date-fns/parse";
+import {compareArraysAsSet} from "@testing-library/jest-dom/dist/utils";
 
 function LoginVolontier(){
     const initialValues = {
@@ -15,11 +16,12 @@ function LoginVolontier(){
     });
     const onSubmit = (values) => {
         axios.post("http://localhost:5000/auth/loginVolontaire", values).then((response) => {
-            if(response.data.error) alert(response.data.error);
-            else{
-            sessionStorage.setItem("token", response.data);
-            console.log(response.data);
+            console.log(response.status);
+            if(response.status === 200){
+                sessionStorage.setItem("token", response.data);
+                window.location.href = "/";
             }
+            else alert(response.data.error);
         });
     };
     return (

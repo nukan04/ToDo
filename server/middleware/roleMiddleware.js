@@ -15,12 +15,12 @@ export default function (roles) {
             const {roles: userRoles} = jwt.verify(token, config.secret);
             const decodedData = jwt.verify(token, config.secret);
             req.data = decodedData;
-            console.log("decodedData", req.data);
+            req.user = decodedData;
             let hasRole = false;
-            console.log("roles", roles);
+            //console.log("roles", roles);
             userRoles.forEach(role => {
                 if (roles.includes(role)) {
-                    console.log("role", role);
+                    //console.log("role", role);
                     hasRole = true;
                 }
             })
