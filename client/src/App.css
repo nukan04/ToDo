@@ -1,9 +1,10 @@
+
 .App {
   text-align: center;
 }
 
 .event {
-  /*form of event*/
+
     background-color: #f2f2f2;
     padding: 20px;
     margin: 20px;
@@ -15,3 +16,4 @@
     margin-right: auto;
 
 }
+

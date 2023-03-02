@@ -1,67 +1,233 @@
 import React from "react";
-import {Formik, Field, Form, ErrorMessage} from "formik";
 import axios from "axios"
-import * as Yup from "yup"
-import parse from "date-fns/parse";
+import "./Vcss.css"
+import { useState } from 'react';
+import {
+    Button,
+    Checkbox,
+    Form,
+    Input,
+    Select,
+    DatePicker, Col, Row
+} from 'antd';
+const { Option } = Select;
 
+
+const formItemLayout = {
+    labelCol: {
+        xs: {
+            span: 24,
+        },
+        sm: {
+            span: 8,
+        },
+    },
+    wrapperCol: {
+        xs: {
+            span: 24,
+        },
+        sm: {
+            span: 16,
+        },
+    },
+};
+const tailFormItemLayout = {
+    wrapperCol: {
+        xs: {
+            span: 24,
+            offset: 0,
+        },
+        sm: {
+            span: 16,
+            offset: 8,
+        },
+    },
+};
 function RegistrateVolontier(){
-    const initialValues = {
-        email: "",
-        password: "",
-        firstname: "",
-        lastname: "",
-        birthdate: "",
-        phone: "",
-    };
-    const validationSchema = Yup.object().shape({
-        email: Yup.string().required("Email is required"),
-        password: Yup.string().required("Password is required").min(4).max(12),
-        firstname: Yup.string().required("Name is required").min(2).max(15),
-        lastname: Yup.string().required("Name is required").min(2).max(15),
-        birthdate: Yup.date()
-            .transform(function (value, originalValue) {
-                if (this.isType(value)) {
-                    return value;
-                }
-                const result = parse(originalValue, "dd.MM.yyyy", new Date());
-                return result;
-            })
-            .typeError("please enter a valid date")
-            .required()
-            .min("1969-11-13", "Date is too early"),
-        phone: Yup.number().required("Phone is required")   
-    });
-    const onSubmit = (values) => {
+
+    const onFinish = (values) => {
         axios.post("http://localhost:5000/auth/registrateVolontaire", values).then((response) => {
             console.log("It work");
         });
     };
+
+    const [form] = Form.useForm();
+    const prefixSelector = (
+        <Form.Item name="prefix" noStyle>
+            <Select
+                style={{
+                    width: 70,
+                }}
+            >
+                <Option value="+7">+7</Option>
+            </Select>
+        </Form.Item>
+    );
+
+    const [autoCompleteResult, setAutoCompleteResult] = useState([]);
+
     return (
-        <div classsName="RegistrateVolontierPage">
-            <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-                <Form className="formContainer">
-                    <label>Email: </label>
-                    <ErrorMessage name={"email"} component={"span"}/>
-                    <Field id="inputRegVol" name="email" placeholder="email"/>
-                    <label>Password: </label>
-                    <ErrorMessage name={"password"} component={"span"}/>
-                    <Field id="inputRegVol" name="password" placeholder="password"/>
-                    <label>Firstname: </label>
-                    <ErrorMessage name={"firstname"} component={"span"}/>
-                    <Field id="inputRegVol" name="firstname" placeholder="firstname"/>
-                    <label>Lastname: </label>
-                    <ErrorMessage name={"lastname"} component={"span"}/>
-                    <Field id="inputRegVol" name="lastname" placeholder="lastname"/>
-                    <label>Birthdate: </label>
-                    <ErrorMessage name={"birthdate"} component={"span"}/>
-                    <Field id="inputRegVol" name="birthdate" placeholder="dd.mm.yyyy"/>
-                    <label>Phone number: </label>
-                    <ErrorMessage name={"phone"} component={"span"}/>
-                    <Field id="inputRegVol" name="phone" placeholder="phone"/>
-                    <button type="submit">Registrate</button>
-                </Form>
-            </Formik>
-        </div>
+        <Row>
+            <Col span={6}></Col>
+            <Col span={10}>
+            <h1>Registration Volontier</h1>
+            <Form
+            className="register"
+            {...formItemLayout}
+            form={form}
+            name="register"
+            onFinish={onFinish}
+            initialValues={{
+
+                prefix: '+7',
+            }}
+            style={{
+                maxWidth: 600,
+            }}
+            scrollToFirstError
+        >
+            <Form.Item
+                name="email"
+                label="E-mail"
+                rules={[
+                    {
+                        type: 'email',
+                        message: 'The input is not valid E-mail!',
+                    },
+                    {
+                        required: true,
+                        message: 'Please input your E-mail!',
+                    },
+                ]}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                name="password"
+                label="Password"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your password!',
+                    },
+                ]}
+                hasFeedback
+            >
+                <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+                name="confirm"
+                label="Confirm Password"
+                dependencies={['password']}
+                hasFeedback
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please confirm your password!',
+                    },
+                    ({ getFieldValue }) => ({
+                        validator(_, value) {
+                            if (!value || getFieldValue('password') === value) {
+                                return Promise.resolve();
+                            }
+                            return Promise.reject(new Error('The two passwords that you entered do not match!'));
+                        },
+                    }),
+                ]}
+            >
+                <Input.Password />
+            </Form.Item>
+
+            <Form.Item
+                name="firstname"
+                label="firstname"
+                tooltip="Your name?"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your name!',
+                        whitespace: true,
+                    },
+                ]}
+            >
+                <Input />
+            </Form.Item>
+            <Form.Item
+                name="lastname"
+                label="lastname"
+                tooltip="Your surname?"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your nickname!',
+                        whitespace: true,
+                    },
+                ]}
+            >
+                <Input />
+            </Form.Item>
+
+            <Form.Item
+                name="phone"
+                label="Phone Number"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your phone number!',
+                    },
+                ]}
+            >
+                <Input
+                    addonBefore={prefixSelector}
+                    style={{
+                        width: '100%',
+                    }}
+                />
+            </Form.Item>
+            {/*birthday*/}
+            <Form.Item
+                name="birthdate"
+                label="birthdate"
+                rules={[
+                    {
+                        required: true,
+                        message: 'Please input your phone number!',
+                    },
+                ]}
+            >
+                <Input
+                    placeholder={"yyyy.mm.dd"}
+                    style={{
+                        width: '100%',
+                    }}
+                />
+            </Form.Item>
+            <Form.Item
+                name="agreement"
+                valuePropName="checked"
+                rules={[
+                    {
+                        validator: (_, value) =>
+                            value ? Promise.resolve() : Promise.reject(new Error('Should accept agreement')),
+                    },
+                ]}
+                {...tailFormItemLayout}
+            >
+                <Checkbox>
+                    I have read the <a href="">agreement</a>
+                </Checkbox>
+            </Form.Item>
+            <Form.Item {...tailFormItemLayout}>
+                <Button type="primary" htmlType="submit">
+                    Register
+                </Button>
+            </Form.Item>
+        </Form>
+            </Col>
+            <Col span={8}></Col>
+        </Row>
     );
 }
 export default RegistrateVolontier;

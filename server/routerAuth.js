@@ -56,6 +56,8 @@ router.get('/GetAllEvents', /*roleMiddleware('[ADMIN]'),*/ admin.GetAllEvents)
 router.get('/GetAllOrganizations', roleMiddleware('[ADMIN]'), admin.GetAllOrganizations)
 router.get('/GetAllVolontaires', roleMiddleware('[ADMIN]'), admin.GetAllVolontaires)
 router.delete('/DeleteEvent', roleMiddleware('[ADMIN]'), admin.DeleteEvent)
+//public routes
+router.get('/searchEvent', auth.searchEvent);
 /*
 router.post('/registration', [
     check('username', "Username can't be empty").notEmpty(),

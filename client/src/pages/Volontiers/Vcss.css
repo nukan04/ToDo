@@ -1,0 +1,22 @@
+
+.register{
+    max-width: 300px;
+    /*    centerelize */
+    margin: 0 auto;
+}
+
+.login-form {
+    max-width: 300px;
+/*    centerelize */
+    margin: 0 auto;
+}
+h1 {
+    text-align: center;
+    margin-bottom: 25px;
+}
+.login-form-forgot {
+    float: right;
+}
+.login-form-button {
+    width: 100%;
+}

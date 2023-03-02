@@ -1,5 +1,6 @@
 import Organization from "../models/roles/Organization.js";
 import Volontaire from "../models/roles/Volontaire.js";
+import Event from "../models/Events.js";
 import Role from "../models/Role.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -70,7 +71,7 @@ class authController {
             }
             const validPassword = bcrypt.compareSync(password, volontaire.password);
             if(!validPassword){
-                return res.status(400).json({message: "Password is incorrect"});
+                return res.status(201).json({message: "Password is incorrect"});
             }
             const token = generateAccessToken(volontaire._id, volontaire.roles);
             return res.json(token);
@@ -95,6 +96,28 @@ class authController {
         }catch (e) {
             console.log(e);
             return res.status(400).json({message: "Login error"})
+        }
+    }
+    async searchEvent(req, res) {
+        try {
+            const {name} = req.body;
+            const events = await Event.aggregate([
+                {
+                    '$search': {
+                        'index': 'default',
+                        'text': {
+                            'query': name,
+                            'path': {
+                                'wildcard': '*'
+                            }
+                        }
+                    }
+                }
+            ]);
+            return res.json(events);
+        } catch (e) {
+            console.log(e);
+            return res.status(400).json({message: "Search error"})
         }
     }
 }
